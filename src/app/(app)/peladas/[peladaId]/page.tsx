@@ -2,7 +2,7 @@
 
 import { Check, Lock, Pencil, Plus, Shield, Shuffle, Trash2, User } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { PeladaNameSheet } from "@/components/peladas/pelada-name-sheet";
@@ -51,7 +51,6 @@ export default function PeladaPage() {
   const deletePlayerMutation = useDeletePlayer(peladaId);
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const selectionInitialized = useRef(false);
   const [teamsQuantity, setTeamsQuantity] = useState(2);
   const [withPosition, setWithPosition] = useState(true);
 
@@ -61,14 +60,6 @@ export default function PeladaPage() {
     open: boolean;
     player: Player | null;
   }>({ open: false, player: null });
-
-  // por padrão, todos os jogadores começam convocados (como no protótipo)
-  useEffect(() => {
-    if (playersData && !selectionInitialized.current) {
-      selectionInitialized.current = true;
-      setSelectedIds(playersData.map((player) => player.id));
-    }
-  }, [playersData]);
 
   if (isLoading) {
     return (

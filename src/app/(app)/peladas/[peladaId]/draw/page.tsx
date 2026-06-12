@@ -12,6 +12,7 @@ import { BottomSheet } from "@/components/shared/bottom-sheet";
 import { PrivBadge } from "@/components/shared/priv-badge";
 import { TopBar } from "@/components/shared/top-bar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getApiErrorMessage } from "@/lib/api/axios";
 import { useDrawTeams } from "@/lib/hooks/use-draw";
 import { usePelada } from "@/lib/hooks/use-peladas";
 import { loadDrawConfig, useDrawConfig } from "@/lib/utils/draw-config";
@@ -254,7 +255,7 @@ export default function DrawPage() {
         {drawMutation.isError && !drawMutation.isPending && (
           <div className="rounded-[18px] border border-line-soft bg-card p-6 text-center">
             <p className="font-sans text-sm text-muted-foreground">
-              Não foi possível sortear os times.
+              {getApiErrorMessage(drawMutation.error)}
             </p>
             <AppButton
               variant="secondary"

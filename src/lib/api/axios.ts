@@ -66,14 +66,25 @@ api.interceptors.response.use(
   }
 );
 
+interface ApiErrorBody {
+  message?: string;
+  error?: { message?: string } | string;
+}
+
 export function getApiErrorMessage(error: unknown): string {
   if (isAxiosError(error)) {
-    const data = error.response?.data as { message?: string } | undefined;
-    if (data?.message) return data.message;
-    if (error.code === "ERR_NETWORK") {
-      return "Não foi possível conectar ao servidor. Verifique sua conexão.";
-    }
-    return error.message;
+    const status = error.response?.status;
+    const data = error.response?.data as ApiErrorBody | undefined;
+    const apiMessage =
+      (typeof data?.error === "object" ? data.error?.message : undefined) ??
+      (typeof data?.error === "string" ? data.error : undefined) ??
+      data?.message;
+    const message =
+      apiMessage ??
+      (error.code === "ERR_NETWORK"
+        ? "Não foi possível conectar ao servidor. Verifique sua conexão."
+        : error.message);
+    return status ? `${message} (HTTP ${status})` : message;
   }
   if (error instanceof Error) return error.message;
   return "Algo deu errado. Tente novamente.";
