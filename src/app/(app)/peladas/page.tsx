@@ -115,7 +115,7 @@ export default function PeladasPage() {
         }
       />
 
-      <div className="flex flex-col gap-3 px-4 pb-6">
+      <div className="grid grid-cols-1 gap-3 px-4 pb-6 md:grid-cols-2 lg:grid-cols-3 lg:px-0">
         {isLoading && (
           <>
             <Skeleton className="h-[118px] rounded-[18px]" />

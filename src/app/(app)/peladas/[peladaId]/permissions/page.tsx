@@ -73,7 +73,6 @@ export default function PermissionsPage() {
   const [pending, setPending] = useState<Record<string, PrivState>>({});
   const [busy, setBusy] = useState(false);
 
-  // aplica uma sequência de ASSIGN/REVOKE e atualiza a lista ao final
   async function applyChanges(
     userIdentifier: string,
     changes: Array<{ privilege: Privilege; action: "ASSIGN" | "REVOKE" }>,
@@ -176,7 +175,7 @@ export default function PermissionsPage() {
     return (
       <div className="flex flex-1 flex-col">
         <TopBar title="Permissões" onBack={() => router.push(`/peladas/${peladaId}`)} />
-        <div className="mx-4 rounded-[18px] border border-line-soft bg-card px-6 py-10 text-center">
+        <div className="mx-4 rounded-[18px] border border-line-soft bg-card px-6 py-10 text-center lg:mx-0">
           <span className="mx-auto mb-4 grid size-12 place-items-center rounded-full bg-danger-soft">
             <ShieldAlert className="size-6 text-danger" />
           </span>
@@ -203,189 +202,194 @@ export default function PermissionsPage() {
     <div className="flex flex-1 flex-col">
       <TopBar title="Permissões" onBack={() => router.push(`/peladas/${peladaId}`)} />
 
-      <div className="flex-1 px-4 pb-6">
-        <p className="mb-4 font-sans text-[13px] leading-relaxed text-muted-foreground">
+      <div className="flex-1 px-4 pb-6 lg:px-0 lg:pb-8">
+        <p className="mb-4 font-sans text-[0.8125rem] leading-relaxed text-muted-foreground">
           Conceda a usuários o poder de{" "}
           <strong style={{ color: MANAGE_ACCENT }}>gerenciar jogadores</strong>,{" "}
           <strong className="text-primary">realizar sorteios</strong> ou{" "}
           <strong className="text-gold">tudo</strong>.
         </p>
 
-        {/* conceder novo acesso */}
-        <div className="mb-[18px] rounded-2xl border border-line-soft bg-card p-3.5">
-          <div className="mb-3 font-display text-sm font-semibold uppercase text-foreground">
-            Conceder permissão
-          </div>
-          <Field>
-            <TextField
-              icon={User}
-              value={identifier}
-              onChange={(event) => setIdentifier(event.target.value)}
-              placeholder="username ou e-mail"
-            />
-          </Field>
-          <div className="mb-2.5 flex gap-[7px]">
-            {(
-              [
-                ["DRAW_TEAMS", "Sortear"],
-                ["MANAGE_PLAYERS", "Gerenciar"],
-                ["ALL", "Todas"],
-              ] as const
-            ).map(([key, label]) => {
-              const on = grantChoice === key;
-              const gold = key === "ALL";
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setGrantChoice(key)}
-                  className={`h-10 flex-1 rounded-[10px] font-sans text-[12.5px] font-bold transition ${
-                    on
-                      ? gold
-                        ? "bg-gold"
-                        : "bg-primary text-primary-foreground"
-                      : "border border-line-soft bg-card-hi text-muted-foreground"
-                  }`}
-                  style={on && gold ? { color: "oklch(0.2 0.05 90)" } : undefined}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-          <AppButton full icon={Plus} onClick={grant} disabled={busy}>
-            Conceder acesso
-          </AppButton>
-        </div>
-
-        {/* usuários com acesso */}
-        <div className="mb-2.5 font-sans text-[10px] font-bold uppercase tracking-[0.12em] text-faint">
-          Usuários com acesso · {list.length}
-          {pelada ? ` + dono` : ""}
-        </div>
-        <div className="flex flex-col gap-2.5">
-          {/* dono (sempre com tudo) */}
-          {pelada && (
-            <div className="rounded-[15px] border border-line-soft bg-card p-[13px]">
-              <div className="flex items-center gap-[11px]">
-                <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-card-hi text-primary">
-                  <span className="font-display text-[15px] font-semibold uppercase">
-                    {pelada.ownerUsername.slice(0, 2)}
-                  </span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="truncate font-sans text-sm font-bold text-foreground">
-                    @{pelada.ownerUsername}
-                  </div>
-                  <div className="truncate font-sans text-[11.5px] text-faint">
-                    Dono da pelada
-                  </div>
-                </div>
-                <PrivBadge tone="owner">
-                  <Crown className="size-[11px]" strokeWidth={2.4} /> Dono
-                </PrivBadge>
-              </div>
+        {/* two-column on desktop */}
+        <div className="flex flex-col gap-0 lg:flex-row lg:items-start lg:gap-6">
+          {/* conceder novo acesso */}
+          <div className="mb-[18px] rounded-2xl border border-line-soft bg-card p-3.5 lg:mb-0 lg:w-72 lg:shrink-0">
+            <div className="mb-3 font-display text-sm font-semibold uppercase text-foreground">
+              Conceder permissão
             </div>
-          )}
+            <Field>
+              <TextField
+                icon={User}
+                value={identifier}
+                onChange={(event) => setIdentifier(event.target.value)}
+                placeholder="username ou e-mail"
+              />
+            </Field>
+            <div className="mb-2.5 flex gap-[7px]">
+              {(
+                [
+                  ["DRAW_TEAMS", "Sortear"],
+                  ["MANAGE_PLAYERS", "Gerenciar"],
+                  ["ALL", "Todas"],
+                ] as const
+              ).map(([key, label]) => {
+                const on = grantChoice === key;
+                const gold = key === "ALL";
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setGrantChoice(key)}
+                    className={`min-h-[2.5rem] flex-1 rounded-[10px] font-sans text-[0.78125rem] font-bold transition ${
+                      on
+                        ? gold
+                          ? "bg-gold"
+                          : "bg-primary text-primary-foreground"
+                        : "border border-line-soft bg-card-hi text-muted-foreground"
+                    }`}
+                    style={on && gold ? { color: "oklch(0.2 0.05 90)" } : undefined}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            <AppButton full icon={Plus} onClick={grant} disabled={busy}>
+              Conceder acesso
+            </AppButton>
+          </div>
 
-          {list.length === 0 && (
-            <p className="py-6 text-center font-sans text-[13.5px] text-muted-foreground">
-              Nenhum usuário com permissões nesta pelada ainda.
-            </p>
-          )}
-
-          {list.map((user) => {
-            const state = stateOf(user);
-            const isChanged = changed(user);
-            const removing = !state.manage && !state.draw;
-            return (
-              <div
-                key={user.username}
-                className="rounded-[15px] border bg-card p-[13px]"
-                style={{
-                  borderColor: isChanged
-                    ? "color-mix(in oklch, var(--accent-color) 45%, var(--line-soft))"
-                    : "var(--line-soft)",
-                }}
-              >
-                <div className="flex items-center gap-[11px]">
-                  <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-card-hi text-primary">
-                    <span className="font-display text-[15px] font-semibold uppercase">
-                      {user.username.slice(0, 2)}
-                    </span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate font-sans text-sm font-bold text-foreground">
-                      @{user.username}
-                    </div>
-                    <div className="truncate font-sans text-[11.5px] text-faint">
-                      {user.email}
-                    </div>
-                  </div>
-                  {state.manage && state.draw && (
-                    <PrivBadge tone="owner">ALL</PrivBadge>
-                  )}
-                </div>
-
-                <div className="mt-3 flex flex-col gap-[9px] border-t border-line-soft pt-[11px]">
-                  {(
-                    [
-                      ["manage", "Gerenciar jogadores", MANAGE_ACCENT],
-                      ["draw", "Realizar sorteios", "var(--accent-color)"],
-                    ] as const
-                  ).map(([key, label, accent]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <span className="font-sans text-[13px] font-semibold text-muted-foreground">
-                        {label}
+          {/* usuários com acesso */}
+          <div className="flex-1 min-w-0">
+            <div className="mb-2.5 font-sans text-[0.625rem] font-bold uppercase tracking-[0.12em] text-faint">
+              Usuários com acesso · {list.length}
+              {pelada ? ` + dono` : ""}
+            </div>
+            <div className="flex flex-col gap-2.5">
+              {/* dono (sempre com tudo) */}
+              {pelada && (
+                <div className="rounded-[15px] border border-line-soft bg-card p-[13px]">
+                  <div className="flex items-center gap-[11px]">
+                    <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-card-hi text-primary">
+                      <span className="font-display text-[0.9375rem] font-semibold uppercase">
+                        {pelada.ownerUsername.slice(0, 2)}
                       </span>
-                      <PermToggle
-                        on={state[key]}
-                        accent={accent}
-                        disabled={busy}
-                        label={`${label} de @${user.username}`}
-                        onClick={() => toggle(user, key)}
-                      />
                     </div>
-                  ))}
-                  {isChanged && (
-                    <div className="mt-[3px] flex gap-2 animate-fade-up">
-                      <AppButton
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => cancel(user)}
-                        disabled={busy}
-                        className="flex-1"
-                      >
-                        Cancelar
-                      </AppButton>
-                      {removing ? (
-                        <AppButton
-                          variant="danger"
-                          size="sm"
-                          icon={Trash2}
-                          onClick={() => confirm(user)}
-                          disabled={busy}
-                          className="flex-1"
-                        >
-                          Remover acesso
-                        </AppButton>
-                      ) : (
-                        <AppButton
-                          size="sm"
-                          icon={Check}
-                          onClick={() => confirm(user)}
-                          disabled={busy}
-                          className="flex-1"
-                        >
-                          Confirmar
-                        </AppButton>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-sans text-sm font-bold text-foreground">
+                        @{pelada.ownerUsername}
+                      </div>
+                      <div className="truncate font-sans text-[0.71875rem] text-faint">
+                        Dono da pelada
+                      </div>
+                    </div>
+                    <PrivBadge tone="owner">
+                      <Crown className="size-[11px]" strokeWidth={2.4} /> Dono
+                    </PrivBadge>
+                  </div>
+                </div>
+              )}
+
+              {list.length === 0 && (
+                <p className="py-6 text-center font-sans text-[0.84375rem] text-muted-foreground">
+                  Nenhum usuário com permissões nesta pelada ainda.
+                </p>
+              )}
+
+              {list.map((user) => {
+                const state = stateOf(user);
+                const isChanged = changed(user);
+                const removing = !state.manage && !state.draw;
+                return (
+                  <div
+                    key={user.username}
+                    className="rounded-[15px] border bg-card p-[13px]"
+                    style={{
+                      borderColor: isChanged
+                        ? "color-mix(in oklch, var(--accent-color) 45%, var(--line-soft))"
+                        : "var(--line-soft)",
+                    }}
+                  >
+                    <div className="flex items-center gap-[11px]">
+                      <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-card-hi text-primary">
+                        <span className="font-display text-[0.9375rem] font-semibold uppercase">
+                          {user.username.slice(0, 2)}
+                        </span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate font-sans text-sm font-bold text-foreground">
+                          @{user.username}
+                        </div>
+                        <div className="truncate font-sans text-[0.71875rem] text-faint">
+                          {user.email}
+                        </div>
+                      </div>
+                      {state.manage && state.draw && (
+                        <PrivBadge tone="owner">ALL</PrivBadge>
                       )}
                     </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+
+                    <div className="mt-3 flex flex-col gap-[9px] border-t border-line-soft pt-[11px]">
+                      {(
+                        [
+                          ["manage", "Gerenciar jogadores", MANAGE_ACCENT],
+                          ["draw", "Realizar sorteios", "var(--accent-color)"],
+                        ] as const
+                      ).map(([key, label, accent]) => (
+                        <div key={key} className="flex items-center justify-between">
+                          <span className="font-sans text-[0.8125rem] font-semibold text-muted-foreground">
+                            {label}
+                          </span>
+                          <PermToggle
+                            on={state[key]}
+                            accent={accent}
+                            disabled={busy}
+                            label={`${label} de @${user.username}`}
+                            onClick={() => toggle(user, key)}
+                          />
+                        </div>
+                      ))}
+                      {isChanged && (
+                        <div className="mt-[3px] flex gap-2 animate-fade-up">
+                          <AppButton
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => cancel(user)}
+                            disabled={busy}
+                            className="flex-1"
+                          >
+                            Cancelar
+                          </AppButton>
+                          {removing ? (
+                            <AppButton
+                              variant="danger"
+                              size="sm"
+                              icon={Trash2}
+                              onClick={() => confirm(user)}
+                              disabled={busy}
+                              className="flex-1"
+                            >
+                              Remover acesso
+                            </AppButton>
+                          ) : (
+                            <AppButton
+                              size="sm"
+                              icon={Check}
+                              onClick={() => confirm(user)}
+                              disabled={busy}
+                              className="flex-1"
+                            >
+                              Confirmar
+                            </AppButton>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>
