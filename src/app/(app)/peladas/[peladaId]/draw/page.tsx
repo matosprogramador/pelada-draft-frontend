@@ -70,7 +70,10 @@ function ShareSheet({
   async function shareImage() {
     if (!previewRef.current) return;
     try {
-      const dataUrl = await toPng(previewRef.current, { pixelRatio: 2 });
+      const dataUrl = await toPng(previewRef.current, {
+        pixelRatio: 2,
+        backgroundColor: "#0d121b",
+      });
       const fileName = `times-${peladaName.toLowerCase().replace(/\s+/g, "-")}.png`;
 
       const canShareFiles =
