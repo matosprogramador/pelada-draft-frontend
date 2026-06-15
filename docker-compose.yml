@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        # NEXT_PUBLIC_* são baked-in em build time — não altere sem rebuild
+        NEXT_PUBLIC_API_URL: http://host.docker.internal:3000
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      HOSTNAME: "0.0.0.0"
+    # Garante que host.docker.internal resolva no Linux
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test:
+        - "CMD"
+        - "node"
+        - "-e"
+        - "fetch('http://localhost:3001/api/health').then(r=>r.ok?process.exit(0):process.exit(1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped

@@ -63,6 +63,57 @@ O contrato completo da API está em `docs/swagger.json`. As respostas seguem o e
 
 Na tela da pelada o usuário seleciona os convocados, define a quantidade de times (2 a 6) e o equilíbrio por posição; a configuração vai para `sessionStorage` e a tela de sorteio dispara `POST /peladas/:id/draw`, exibindo os times com identidade de cor (Amarelo, Azul, Branco, Verde, Vermelho, Preto) e permitindo refazer ou compartilhar (copiar/WhatsApp).
 
+## Rodando com Docker
+
+### Local (desenvolvimento/teste)
+
+```bash
+docker compose build
+docker compose up -d
+```
+
+A aplicação ficará disponível em **http://localhost:3001** e se conectará ao backend em `http://host.docker.internal:3000` (backend rodando na máquina host).
+
+Para ver os logs:
+
+```bash
+docker compose logs -f
+```
+
+Para parar:
+
+```bash
+docker compose down
+```
+
+### Variáveis de ambiente
+
+| Variável | Descrição | Valor padrão (Docker local) |
+| --- | --- | --- |
+| `NEXT_PUBLIC_API_URL` | URL base da API | `http://host.docker.internal:3000` |
+
+> **Atenção:** `NEXT_PUBLIC_*` são embutidas no bundle JavaScript em **build time**, não em runtime. Para mudar a URL da API é necessário rebuildar a imagem passando o build arg:
+>
+> ```bash
+> docker build --build-arg NEXT_PUBLIC_API_URL=https://api.pelada-draft.com.br .
+> ```
+
+### Produção
+
+Em produção, passe a URL real da API via build arg no CI/CD:
+
+```bash
+docker build \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.pelada-draft.com.br \
+  -t pelada-draft-frontend:latest .
+
+docker run -p 3001:3001 pelada-draft-frontend:latest
+```
+
+### Health check
+
+A rota `GET /api/health` retorna `{ "status": "ok" }` e é usada pelo docker-compose para monitorar a saúde do container.
+
 ## Estrutura
 
 ```
