@@ -118,7 +118,7 @@ function ShareSheet({
             </AppButton>
           </div>
           <AppButton variant="soft" full icon={ImageDown} onClick={shareImage}>
-            Salvar como imagem
+            Exportar como imagem
           </AppButton>
         </div>
       }
