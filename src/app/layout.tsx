@@ -23,11 +23,10 @@ export const metadata: Metadata = {
   },
   description: "Times equilibrados em segundos.",
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+    other: { rel: "icon", url: "/favicon.svg", type: "image/svg+xml" },
   },
   manifest: "/site.webmanifest",
 };
