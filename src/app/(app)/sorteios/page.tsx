@@ -12,7 +12,7 @@ export default function SorteiosPage() {
   return (
     <div className="flex flex-1 flex-col pt-3">
       <ScreenHeader subtitle="Histórico" title="Sorteios" />
-      <div className="flex flex-1 flex-col items-center justify-center px-7 pb-10 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center px-7 pb-10 text-center lg:px-0">
         <div className="relative mb-[26px] size-[116px]">
           <div className="absolute inset-0 rounded-[30px] bg-accent-soft animate-pulse-ring" />
           <div
