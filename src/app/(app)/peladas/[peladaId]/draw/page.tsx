@@ -69,11 +69,13 @@ function ShareSheet({
 
   async function shareImage() {
     if (!previewRef.current) return;
+    const el = previewRef.current;
     try {
-      const el = previewRef.current;
+      await document.fonts.ready;
       el.style.borderRadius = "0";
       const dataUrl = await toPng(el, { pixelRatio: 2 });
       el.style.borderRadius = "";
+
       const fileName = `times-${peladaName.toLowerCase().replace(/\s+/g, "-")}.png`;
 
       const canShareFiles =
@@ -93,8 +95,9 @@ function ShareSheet({
         link.href = dataUrl;
         link.click();
       }
-    } catch {
-      previewRef.current.style.borderRadius = "";
+    } catch (err) {
+      el.style.borderRadius = "";
+      if (err instanceof DOMException && err.name === "AbortError") return;
       toast.error("Não foi possível exportar a imagem.");
     }
   }
