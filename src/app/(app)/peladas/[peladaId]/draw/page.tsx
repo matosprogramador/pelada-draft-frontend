@@ -70,10 +70,10 @@ function ShareSheet({
   async function shareImage() {
     if (!previewRef.current) return;
     try {
-      const dataUrl = await toPng(previewRef.current, {
-        pixelRatio: 2,
-        backgroundColor: "#0d121b",
-      });
+      const el = previewRef.current;
+      el.style.borderRadius = "0";
+      const dataUrl = await toPng(el, { pixelRatio: 2 });
+      el.style.borderRadius = "";
       const fileName = `times-${peladaName.toLowerCase().replace(/\s+/g, "-")}.png`;
 
       const canShareFiles =
@@ -94,6 +94,7 @@ function ShareSheet({
         link.click();
       }
     } catch {
+      previewRef.current.style.borderRadius = "";
       toast.error("Não foi possível exportar a imagem.");
     }
   }
