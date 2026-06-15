@@ -4,7 +4,8 @@ services:
       context: .
       args:
         # NEXT_PUBLIC_* são baked-in em build time — não altere sem rebuild
-        NEXT_PUBLIC_API_URL: http://localhost:3000
+        # Lido do arquivo .env na raiz do projeto (copie .env.example → .env)
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
     ports:
       - "3001:3001"
     environment:
